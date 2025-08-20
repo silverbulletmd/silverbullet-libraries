@@ -1,5 +1,4 @@
 
-
 #meta
 
 [[^Library/Std/Import]] and [[^Library/Std/Export]] support for [Github repo files](https://github.com/).
@@ -41,7 +40,7 @@ event.listen {
       return {
         {
           id = "github-file",
-          name = "Github file"
+          name = "Github: Repo file",
         },
       }
     end
@@ -54,43 +53,35 @@ event.listen {
   run = function(event)
     local url = event.data.url
     local repo, branch, path = github.extractData(url)
-    local oldContent = githubGist.request("https://api.github.com/repos/" .. repo .. "/contents/" .. path .. "?ref=" .. branch, "GET")
+    local resp = githubGist.request("https://api.github.com/repos/" .. repo .. "/contents/" .. path .. "?ref=" .. branch, "GET")
     if not resp.ok then
       editor.flashNotification("Failed, see console for error")
       js.log("Error", resp)
       return
     end
-    local files = resp.body.files
-    for filename, meta in pairs(files) do
-      if filename:endsWith(".md") then
-        -- Fetch the content
-        local content = http.request(meta.raw_url).body
-        local fm = index.extractFrontmatter(content)
-        local suggestedPath = filename:gsub("%.md$", "")
-        if table.includes(fm.frontmatter.tags, "meta") then
-          -- Maybe more of a library function
-          suggestedPath = "Library/" .. suggestedPath
-        end
-        local localPath = editor.prompt("Save to", suggestedPath)
-        if not localPath then
-          return
-        end
-        if space.fileExists(localPath .. ".md") then
-          editor.flashNotification("Page already exists, won't do that", "error")
-          return
-        end
-        space.writePage(localPath, content)
-        editor.flashNotification("Imported to " .. localPath)
-        editor.navigate({kind="page", page=localPath})
-        local updated = index.patchFrontmatter(editor.getText(),
-        {
-          {op="set-key", path="source", value="github-gist"},
-          {op="set-key", path=githubGist.fmUrlKey, value=resp.body.html_url},
-          {op="set-key", path=githubGist.fmFileKey, value=filename},
-        })
-        editor.setText(updated)
-      end
+    local content = encoding.utf8Decode(encoding.base64Decode(resp.body.content))
+    local fm = index.extractFrontmatter(content)
+    local suggestedPath = path:gsub("%.md$", "")
+    if table.includes(fm.frontmatter.tags, "meta") then
+      -- Maybe more of a library function
+      suggestedPath = "Library/" .. suggestedPath
     end
+    local localPath = editor.prompt("Save to", suggestedPath)
+    if not localPath then
+      return
+    end
+    if space.fileExists(localPath .. ".md") then
+      editor.flashNotification("Page already exists, won't do that", "error")
+      return
+    end
+    space.writePage(localPath, content)
+    editor.flashNotification("Imported to " .. localPath)
+    editor.navigate({kind="page", page=localPath})
+    local updated = index.patchFrontmatter(editor.getText(),
+    {
+      {op="set-key", path=github.fmUrlKey, value=url}
+    })
+    editor.setText(updated)
   end
 }
 ```
@@ -140,7 +131,7 @@ event.listen {
   end
 }
 
--- Gist export implementation
+-- Export implementation
 event.listen {
   name = "export:run:github-file",
   run = function(event)
