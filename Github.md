@@ -1,3 +1,7 @@
+---
+githubUrl: https://github.com/silverbulletmd/silverbullet-libraries/blob/main/Github.md
+---
+
 #meta
 
 [[^Library/Std/Import]] and [[^Library/Std/Export]] support for [Github repo files](https://github.com/).
@@ -118,7 +122,8 @@ event.listen {
     local fm = index.extractFrontmatter(text, {
       removeKeys = {githubGist.fmUrlKey, githubGist.fmFileKey}
     })
-    local repo, path = fm.frontmatter[github.fmUrlKey]
+    local repo, path = github.extractData(fm.frontmatter[github.fmUrlKey])
+    local sha = nil -- will be set for existing files
     if not repo then
       -- Not there? This will be a new file
       repo = editor.prompt "Github repo (user/repo):"
@@ -129,6 +134,14 @@ event.listen {
       if not path then
         return
       end
+    else
+      -- We did find an existing file, let's fetch it to get the SHA
+      local oldContent = githubGist.request("https://api.github.com/repos/" .. repo .. "/contents/" .. path, "GET")
+      if not oldContent.ok then
+        editor.flashNotification("Could not fetch existing file", "error")
+        return
+      end
+      sha = oldContent.body.sha
     end
     local resp = githubGist.request("https://api.github.com/repos/" .. repo .. "/contents/" .. path, "PUT", {
       message = "Commit",
@@ -136,13 +149,14 @@ event.listen {
         name = "Zef Hemel",
         email = "zef@zef.me"
       },
+      sha = sha,
       content = encoding.base64Encode(text)
     })
     if resp.ok then
       editor.flashNotification "Published file successfully"
       local updated = index.patchFrontmatter(editor.getText(),
       {
-        {op="set-key", path=githubGist.fmUrlKey, value=resp.body.html_url},
+        {op="set-key", path=github.fmUrlKey, value=resp.body.html_url},
       })
       editor.setText(updated)
       editor.flashNotification "Done!"
