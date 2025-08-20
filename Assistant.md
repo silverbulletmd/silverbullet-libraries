@@ -1,6 +1,8 @@
-#meta #wip
 
-AI features for SilverBullet.
+
+#meta
+
+Proof of concept (and WIP) AI features for SilverBullet.
 
 Currently implemented commands:
 
