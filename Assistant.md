@@ -1,8 +1,8 @@
 
 
-#meta
+#meta #wip
 
-Proof of concept (and WIP) AI features for SilverBullet.
+Proof of concept (and WIP) AI features for SilverBullet implemented with Space Lua. A more advanced plug [silverbullet-ai](https://github.com/justyns/silverbullet-ai) has _significantly_ more features.
 
 Currently implemented commands:
 
