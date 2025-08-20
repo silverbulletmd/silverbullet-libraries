@@ -96,6 +96,9 @@ event.listen {
 
 -- returns something/bla branch path
 function github.extractData(url)
+  if url == nil then
+    return nil
+  end
   return url:match("github%.com/([^/]+/[^/]+)/[^/]+/([^/]+)/(.+)")
 end
 
@@ -121,6 +124,7 @@ event.listen {
     local fm = index.extractFrontmatter(text, {
       removeKeys = {github.fmUrlKey},
     })
+    print("HEREERE", fm.frontmatter[github.fmUrlKey])
     local repo, branch, path = github.extractData(fm.frontmatter[github.fmUrlKey])
     local sha = nil -- will be set for existing files
     if not repo then
