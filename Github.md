@@ -1,6 +1,4 @@
----
-githubUrl: https://github.com/silverbulletmd/silverbullet-libraries/blob/main/Github.md
----
+
 
 #meta
 
@@ -19,7 +17,7 @@ config.set("github.token", "your token")
 ```space-lua
 -- priority: 50
 github = {
-  fmUrlKey = "githubUrl"
+  fmUrlKey = "githubUrl",
 }
 ```
 
@@ -30,7 +28,7 @@ event.listen {
   name = "import:discover",
   run = function(event)
     local url = event.data.url
-    if githubGist.extractGistId(url) then
+    if github.extractData(url) then
       return {
         {
           id = "github-gist",
@@ -95,9 +93,10 @@ event.listen {
 # Export implementation
 ```space-lua
 -- Utility functions
--- returns something/bla and path
+
+-- returns something/bla branch path
 function github.extractData(url)
-  return url:match("github%.com/([^/]+/[^/]+)/[^/]+/[^/]+/(.+)")
+  return url:match("github%.com/([^/]+/[^/]+)/[^/]+/([^/]+)/(.+)")
 end
 
 -- Export discovery
@@ -120,9 +119,9 @@ event.listen {
     -- Extract any existing gist URLs
     local text = event.data.text
     local fm = index.extractFrontmatter(text, {
-      removeKeys = {githubGist.fmUrlKey, githubGist.fmFileKey}
+      removeKeys = {github.fmUrlKey},
     })
-    local repo, path = github.extractData(fm.frontmatter[github.fmUrlKey])
+    local repo, branch, path = github.extractData(fm.frontmatter[github.fmUrlKey])
     local sha = nil -- will be set for existing files
     if not repo then
       -- Not there? This will be a new file
@@ -130,13 +129,17 @@ event.listen {
       if not repo then
         return
       end
-      path = editor.prompt "File path (something.md):"
+      branch = editor.prompt("Branch:", "main")
+      if not branch then
+        return
+      end
+      path = editor.prompt("File path:", editor.getCurrentPage() .. ".md")
       if not path then
         return
       end
     else
       -- We did find an existing file, let's fetch it to get the SHA
-      local oldContent = githubGist.request("https://api.github.com/repos/" .. repo .. "/contents/" .. path, "GET")
+      local oldContent = githubGist.request("https://api.github.com/repos/" .. repo .. "/contents/" .. path .. "?ref=" .. branch, "GET")
       if not oldContent.ok then
         editor.flashNotification("Could not fetch existing file", "error")
         return
@@ -149,14 +152,16 @@ event.listen {
         name = "Zef Hemel",
         email = "zef@zef.me"
       },
+      branch = branch,
       sha = sha,
-      content = encoding.base64Encode(text)
+      content = encoding.base64Encode(fm.text)
     })
     if resp.ok then
       editor.flashNotification "Published file successfully"
+      local url = "https://github.com/" .. repo .. "/blob/" .. branch .. "/" .. path
       local updated = index.patchFrontmatter(editor.getText(),
       {
-        {op="set-key", path=github.fmUrlKey, value=resp.body.html_url},
+        {op="set-key", path=github.fmUrlKey, value=url}
       })
       editor.setText(updated)
       editor.flashNotification "Done!"
