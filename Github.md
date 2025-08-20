@@ -5,15 +5,24 @@
 [[^Library/Std/Import]] and [[^Library/Std/Export]] support for [Github repo files](https://github.com/).
 
 # Configuration
-If you only want to _import_ from Gist URLs, no configuration is required.
+If you only want to _import_ from Github URLs, no configuration is required.
 
-To _export_ gists, you need to get a [personal Github token](https://github.com/settings/personal-access-tokens) (with at least Gist permissions). Configure your token somewhere in Space Lua (use a `space-lua` block):
+To _export_ got a Github repo, you need to get a [personal Github token](https://github.com/settings/personal-access-tokens) (with repo permissions). Configure your token somewhere in Space Lua (use a `space-lua` block), ideally a `SECRETS` page. This configuration is shared with [[^Library/Std/Gist]].
 
 ```lua
 config.set("github.token", "your token")
 ```
 
-# Implementation: constants
+In addition, you need to configure a name and email that will be part of the commit:
+
+```lua
+config.set("github.name", "John Doe")
+config.set("github.email", "john@doe.com")
+```
+
+# Implementation
+
+## Constants
 ```space-lua
 -- priority: 50
 github = {
@@ -21,7 +30,7 @@ github = {
 }
 ```
 
-# Import implementation
+## Import
 ```space-lua
 -- Import discovery
 event.listen {
@@ -31,8 +40,8 @@ event.listen {
     if github.extractData(url) then
       return {
         {
-          id = "github-gist",
-          name = "Gist"
+          id = "github-file",
+          name = "Github file"
         },
       }
     end
@@ -41,15 +50,11 @@ event.listen {
 
 -- Gist export implementation
 event.listen {
-  name = "import:run:github-gist",
+  name = "import:run:github-file",
   run = function(event)
     local url = event.data.url
-    local gistUrl = githubGist.extractGistId(url)
-    local resp = http.request("https://api.github.com/gists/" .. gistUrl, {
-      headers = {
-        Accept = "application/vnd.github.v3+json"
-      }
-    })
+    local repo, branch, path = github.extractData(url)
+    local oldContent = githubGist.request("https://api.github.com/repos/" .. repo .. "/contents/" .. path .. "?ref=" .. branch, "GET")
     if not resp.ok then
       editor.flashNotification("Failed, see console for error")
       js.log("Error", resp)
@@ -90,16 +95,22 @@ event.listen {
 }
 ```
 
-# Export implementation
+## Export
 ```space-lua
--- Utility functions
-
--- returns something/bla branch path
+-- returns (something/bla, branch, path)
 function github.extractData(url)
   if url == nil then
     return nil
   end
   return url:match("github%.com/([^/]+/[^/]+)/[^/]+/([^/]+)/(.+)")
+end
+
+function github.buildUrl(repo, path)
+  return "https://api.github.com/repos/" .. repo .. "/contents/" .. path
+end
+
+function github.buildUrlWithBranch(repo, branch, path)
+  return github.buildUrl(repo, path) .. "?ref=" .. branch
 end
 
 -- Export discovery
@@ -124,7 +135,10 @@ event.listen {
     local fm = index.extractFrontmatter(text, {
       removeKeys = {github.fmUrlKey},
     })
-    print("HEREERE", fm.frontmatter[github.fmUrlKey])
+    if not config.get("github.token") then
+      editor.flashNotification("github.token needs to be set", "error")
+      return
+    end
     local repo, branch, path = github.extractData(fm.frontmatter[github.fmUrlKey])
     local sha = nil -- will be set for existing files
     if not repo then
@@ -143,18 +157,28 @@ event.listen {
       end
     else
       -- We did find an existing file, let's fetch it to get the SHA
-      local oldContent = githubGist.request("https://api.github.com/repos/" .. repo .. "/contents/" .. path .. "?ref=" .. branch, "GET")
+      local oldContent = githubGist.request(github.buildUrlWithBranch(repo, branch, path), "GET")
       if not oldContent.ok then
         editor.flashNotification("Could not fetch existing file", "error")
         return
       end
       sha = oldContent.body.sha
     end
-    local resp = githubGist.request("https://api.github.com/repos/" .. repo .. "/contents/" .. path, "PUT", {
-      message = "Commit",
+    -- Ask for a commit message
+    local message = editor.prompt("Commit message:", "Commit")
+    -- Check the configuration
+    local name = config.get("github.name")
+    local email = config.get("github.email")
+    if not name or not email then
+      editor.flashNotification("github.name and github.email need to be configured", "error")
+      return
+    end
+    -- Push the change
+    local resp = githubGist.request(github.buildUrl(repo, path), "PUT", {
+      message = message,
       committer = {
-        name = "Zef Hemel",
-        email = "zef@zef.me"
+        name = name,
+        email = email
       },
       branch = branch,
       sha = sha,
