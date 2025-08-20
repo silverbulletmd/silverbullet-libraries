@@ -113,6 +113,20 @@ function github.buildUrlWithBranch(repo, branch, path)
   return github.buildUrl(repo, path) .. "?ref=" .. branch
 end
 
+function github.checkConfig()
+  if not config.get("github.token") then
+    error("github.token needs to be set")
+  end
+  if not config.get("github.name") then
+    error("github.name needs to be set")
+    return
+  end
+  if not config.get("github.email") then
+    error("github.email needs to be set")
+    return
+  end
+end
+
 -- Export discovery
 event.listen {
   name = "export:discover",
@@ -120,7 +134,7 @@ event.listen {
     return {
       {
         id = "github-file",
-        name = "Github file"
+        name = "Github: Repo file"
       },
     }
   end
@@ -130,15 +144,17 @@ event.listen {
 event.listen {
   name = "export:run:github-file",
   run = function(event)
-    -- Extract any existing gist URLs
+    -- Check configuration
+    local checkOk, err = pcall(github.checkConfig)
+    if not checkOk then
+      editor.flashNotification(err, "error")
+      return
+    end
+    -- Extract the URL from frontmatter if set
     local text = event.data.text
     local fm = index.extractFrontmatter(text, {
       removeKeys = {github.fmUrlKey},
     })
-    if not config.get("github.token") then
-      editor.flashNotification("github.token needs to be set", "error")
-      return
-    end
     local repo, branch, path = github.extractData(fm.frontmatter[github.fmUrlKey])
     local sha = nil -- will be set for existing files
     if not repo then
@@ -166,19 +182,12 @@ event.listen {
     end
     -- Ask for a commit message
     local message = editor.prompt("Commit message:", "Commit")
-    -- Check the configuration
-    local name = config.get("github.name")
-    local email = config.get("github.email")
-    if not name or not email then
-      editor.flashNotification("github.name and github.email need to be configured", "error")
-      return
-    end
     -- Push the change
     local resp = githubGist.request(github.buildUrl(repo, path), "PUT", {
       message = message,
       committer = {
-        name = name,
-        email = email
+        name = config.get("github.name"),
+        email = config.get("github.email"),
       },
       branch = branch,
       sha = sha,
