@@ -9,6 +9,7 @@ function utilities.getmeetingTitle()
   return t
 end
 
+-- Embed external resources
 function utilities.embedUrl(specOrUrl,w,h) 
   local width = w or "100%"
   local height = h or "400px"

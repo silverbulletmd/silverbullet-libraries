@@ -3,8 +3,26 @@ pageDecoration:
   prefix: "🎄 "
   disableTOC: true
 ---
+
+# Malys theme
+
+Dark theme thought for readibility and productivity.
+
+## Example
+# 1 
+## 2
+### 3
+#### 4
+##### 5
+###### 6
+
+`code`
+
+*emphasis*  
+
+**strong**
+
 ## Editor
-[Source](https://gist.github.com/vladstudio/749becce3470082292a066fc617f1904)
 
 ```space-style
 html {
@@ -162,18 +180,4 @@ div.cm-scroller {
   scrollbar-width: thin;
 }
 ```
-
-## Example
-# 1 
-## 2
-### 3
-#### 4
-##### 5
-###### 6
-
-`code`
-
-*emphasis*  
-
-**strong**
 

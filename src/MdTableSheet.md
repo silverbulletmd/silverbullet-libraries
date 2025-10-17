@@ -9,6 +9,27 @@ The \`F\` function takes two arguments:
 Here's an example usage: \${F("SUM(A1:A5)","1")}\`
 
 
+| Header A | Header B |
+| --- | --- |
+| 1.2 | 2   |
+| 3   | 4   |
+| 5   | 6   |
+| 7   | 8   |
+| 9   | 10  |
+| ${F("CONCAT(A1,A2)")} | ${F("SUM(A1:B5)")} |
+
+| Header A | Header B | H5  |
+| --- | --- | --- |
+| 10  | 20  | 50  |
+| 30  | 40  | 50  |
+| 50  | 60  | 50  |
+| 70  | 80  | 50  |
+| 90  | 100 | 50  |
+| ${F("SUM(A1:B5)","1")} | ${F("SUM(B1:B5)","2")} | ${F("SUM(C1:C5)","2")} |
+
+
+
+
 ```space-lua
 -- ---------------------------
 -- SilverBullet Markdown Table + Formulajs evaluator
@@ -219,22 +240,3 @@ function F(formulaString,label, pageName)
   return formulajs[funcName](args)
 end
 ```
-
-| Header A | Header B |
-| --- | --- |
-| 1.2 | 2   |
-| 3   | 4   |
-| 5   | 6   |
-| 7   | 8   |
-| 9   | 10  |
-| ${F("CONCAT(A1,A2)")} | ${F("SUM(A1:B5)")} |
-
-| Header A | Header B | H5  |
-| --- | --- | --- |
-| 10  | 20  | 50  |
-| 30  | 40  | 50  |
-| 50  | 60  | 50  |
-| 70  | 80  | 50  |
-| 90  | 100 | 50  |
-| ${F("SUM(A1:B5)","1")} | ${F("SUM(B1:B5)","2")} | ${F("SUM(C1:C5)","2")} |
-

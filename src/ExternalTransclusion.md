@@ -1,6 +1,10 @@
 # External transclusion
 Transclude data form external resource.
 
+
+${ transclude "https://raw.githubusercontent.com/dair-ai/Prompt-Engineering-Guide/refs/heads/main/pages/techniques/zeroshot.en.mdx" }
+
+
 ```space-lua
 transclude = function(url)
   local result = http.request(url)
@@ -9,6 +13,4 @@ transclude = function(url)
   return widget.new { markdown = rendered:gsub("<[^>]*>","") }
 end
 ```
-
-${ transclude "https://raw.githubusercontent.com/dair-ai/Prompt-Engineering-Guide/refs/heads/main/pages/techniques/zeroshot.en.mdx" }
 

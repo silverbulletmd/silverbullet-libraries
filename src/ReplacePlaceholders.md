@@ -17,6 +17,10 @@ To use the Replace Placeholders feature:
 Note: The Replace Placeholders feature replaces placeholders in the entire markdown content of the current page.
 
 Example:
+
+_d_ with this _t_ will be transformed to `demonstration with this text`
+
+
 ```space-lua
 function replaceValue(content, tags)
   local c= content
@@ -60,8 +64,6 @@ command.define {
   end
 }
 ```
-
-_d_ with this _t_ will be transformed to `demonstration with this text`
 
 
 

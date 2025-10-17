@@ -4,7 +4,7 @@ From community, move directly to the selected header.
 
 
 ```space-lua
-function headingsPicker(options)
+local function headingsPicker(options)
 
   local text = editor.getText()
   local pageName = editor.getCurrentPage()

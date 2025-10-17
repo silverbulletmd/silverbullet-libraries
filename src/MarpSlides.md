@@ -1,6 +1,6 @@
 # Marp slides
  
- This library provides a way to preview your [Marp](https://marp.app/) slides in a panel while you are editing your space.
+This library provides a way to preview your [Marp](https://marp.app/) slides in a panel while you are editing your space.
 
 With Marp Preview, you can:
 - Preview your slides without leaving the context of your space
