@@ -15,16 +15,16 @@ frontmatter: |
     image_scale:
     size:
     city:
-    status: 
-    action: 
+    status: scop
+    action: todo
     domains:
-    - 
+    - infogérance
     services:
-    - 
+    - logiciel libre
     valeurs:
-    - 
+    - ecologie
     references:
-    - 
+    - SNCF
 pageDecoration:
   disableTOC: true
 ---

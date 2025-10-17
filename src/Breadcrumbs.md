@@ -1,8 +1,12 @@
+---
+tags: function
+---
 # Breadcrumbs
+Fork of [source](https://community.silverbullet.md/t/breadcrumbs-for-hierarchical-pages/737) to improve breadcrumbs with last updated children pages.
 
-With breadcrumbs, you can navigate back through the hierarchy of pages in a hierarchical space. The breadcrumbs are displayed at the top of the page and are clickable.
+> **example** 
+> [🏡 home](https://silverbullet.l.malys.ovh/home)/[z-custom](https://silverbullet.l.malys.ovh/z-custom) /[breadcrumbs](https://silverbullet.l.malys.ovh/z-custom/breadcrumbs)  -[template](https://silverbullet.l.malys.ovh/z-custom/breadcrumbs/template)
 
-See [source](https://community.silverbullet.md/t/breadcrumbs-for-hierarchical-pages/737)
 
 ```space-lua
 yg=yg or {}
@@ -64,3 +68,7 @@ event.listen {
 }
 
 ```
+
+See [flex table](https://community.silverbullet.md/t/space-lua-flexbox-columns/2017)
+
+

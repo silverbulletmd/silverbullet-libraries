@@ -1,23 +1,11 @@
-# Admonition Widget
+# Admonition
+From  community, enhance default admonition.
 
-This widget allows you to create admonition boxes with different types and colors.
+> **example** 
+>
 
-- Specify the type of admonition box with the `admonition` attribute.
-- Customize the color of the admonition box with the `color` attribute.
-
-The following types are available:
-
-- `abstract`
-- `caution`
-- `danger`
-- `error`
-- `hint`
-- `important`
-- `note`
-- `tip`
-- `warning`
-- `success`
-
+> **bug** 
+> 
 
 ```space-style
 

@@ -15,11 +15,12 @@ frontmatter: |
     job:
       position: 
       - 
-      company: 
+      company: Scop And Co
       department: 
+      - consulting
       - 
       domains: 
-      -    
+      - it   
       skills:
       - 
       tools:

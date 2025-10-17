@@ -1,13 +1,7 @@
-# Organization Contacts in VCard format
-
-This library provides a way to export your SilverBullet Space organization contacts in VCard format. VCard is a standard format for electronic business cards.
-
-With Organization Contacts in VCard format, you can:
-- Export your organization contacts in a standardized format
-- Share your contacts with other people or applications
-- Import your contacts into other applications or services that support VCard format
-
+# VCF exporter
+Export `person` template to an unique vcf file.
 ```space-lua
+
 local function join(tbl, sep)
     return table.concat(tbl, sep or ", ")
 end

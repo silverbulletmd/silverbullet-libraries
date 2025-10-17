@@ -1,37 +1,47 @@
-This is a collection of awesome SilverBullet libraries, currently containing:
+# 🚀 SilverBullet Libraries
 
-# Available libraries
-* Admonition.md: Add admonition blocks to your pages
-* AdmonitionWidget.md: A widget for admonition blocks.
-* Assistant.md: a very basic integration with LLM
-* Breadcrumbs.md: Add breadcrumbs to your pages
-* ColorPicker.md: Add a color picker to your pages
-* FastTag.md: Quickly navigate to pages and articles with specific tags.
-* Formatter.md: Format entire document or selected text.
-* Ghost.md: Integration with the [Ghost CMS](https://ghost.org/)
-* Git.md: Basic integration with Git
-* JournalNavigationWidget.md: Navigate Weekly/Daily Journals.
-* MarpSlides.md: Preview your Marp slides in a panel.
-* OrganizationChart.md: Create Plantuml Organization Chart.
-* OrganizationCompany.md: Add company information to your pages
-* OrganizationPerson.md: Add person information to your pages
-* OrganizationVcf.md: Add vcf information to your pages
-* ReplacePlaceholders.md: Replace placeholders in your markdown content.
-* SearchGrep.md: Search for specific text in your workspace using `rg`.
-* Sitemap.md: Generate a sitemap for your space.
-* TableSheet.md: Embed dynamic formulas in your Markdown tables.
-* VscodePalette.md: Search and open content items (pages, commands, etc.) quickly.
+A curated collection of plugins, templates, and utilities for [SilverBullet](https://silverbullet.md/).
 
-# Available themes
-* Theme/Base16.md: A dark theme based on Base16.
-* Theme/Malys.md: A dark theme with space-inspired colors and optimized for productivity.
+## 📦 Available Libraries
 
-# How to use
-1. Navigate to the library you would like to import, e.g. `https://github.com/silverbulletmd/silverbullet-libraries/blob/main/Git.md`
-2. Copy the URL
-3. Run the `Import: URL` command in SilverBullet and paste the URL to the library, select to import from a `Github: Repo file`.
-4. Run the `System: Reload` command
-5. Enjoy!
+- [Admonition](https://github.com/malys/silverbullet-libraries/blob/main/src/Admonition.md)
+- [Bashcode](https://github.com/malys/silverbullet-libraries/blob/main/src/BashCode.md)
+- [Breadcrumbs](https://github.com/malys/silverbullet-libraries/blob/main/src/Breadcrumbs.md)
+- [Cursorposition](https://github.com/malys/silverbullet-libraries/blob/main/src/CursorPosition.md)
+- [Externaltransclusion](https://github.com/malys/silverbullet-libraries/blob/main/src/ExternalTransclusion.md)
+- [Fasttagexplorer](https://github.com/malys/silverbullet-libraries/blob/main/src/FastTagExplorer.md)
+- [Headerpicker](https://github.com/malys/silverbullet-libraries/blob/main/src/HeaderPicker.md)
+- [Helpshortcuts](https://github.com/malys/silverbullet-libraries/blob/main/src/HelpShortcuts.md)
+- [Luaeditor](https://github.com/malys/silverbullet-libraries/blob/main/src/LuaEditor.md)
+- [Marpslides](https://github.com/malys/silverbullet-libraries/blob/main/src/MarpSlides.md)
+- [Mdtablesheet](https://github.com/malys/silverbullet-libraries/blob/main/src/MdTableSheet.md)
+- [Newchildpage](https://github.com/malys/silverbullet-libraries/blob/main/src/NewChildPage.md)
+- [Chart](https://github.com/malys/silverbullet-libraries/blob/main/src/Organization/Chart.md)
+- [Vcfexport](https://github.com/malys/silverbullet-libraries/blob/main/src/Organization/VCFExport.md)
+- [Replaceplaceholders](https://github.com/malys/silverbullet-libraries/blob/main/src/ReplacePlaceholders.md)
+- [Taiga](https://github.com/malys/silverbullet-libraries/blob/main/src/Taiga.md)
+- [Style](https://github.com/malys/silverbullet-libraries/blob/main/src/Theme/style.md)
+- [Utilities](https://github.com/malys/silverbullet-libraries/blob/main/src/Utilities.md)
+- [Vscodepalette](https://github.com/malys/silverbullet-libraries/blob/main/src/VSCodePalette.md)
 
-# Contributions
-Feel free to fork and issue pull requests with your own libraries or improvements the ones available here.
+## 🛠️ Installation
+1. Browse the libraries above and find one you'd like to use
+2. Click on the library to view its contents
+3. Copy the file URL (e.g., `https://github.com/malys/silverbullet-libraries/blob/main/src/example.md`)
+4. In SilverBullet, run the `Import: URL` command
+5. Paste the URL and select `Github: Repo file` as the source
+6. Run `System: Reload` to activate the library
+
+## 🤝 Contributing
+We welcome contributions! Here's how you can help:
+- Add new libraries or improve existing ones
+- Fix bugs or improve documentation
+- Suggest new features or report issues
+
+To contribute:
+1. Fork this repository
+2. Create a new branch for your changes
+3. Submit a pull request
+
+## 📜 License
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.

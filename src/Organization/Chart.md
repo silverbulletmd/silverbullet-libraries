@@ -1,12 +1,11 @@
 # Organization Chart
 
-This library provides a way to create Plantuml Organization Chart in SilverBullet Space.
+This library provides a way to create [Plantuml](https://plantuml.com/fr/) organization chart.
 
 With Organization Chart, you can:
 - Create a visual representation of your organizational structure
 - Show the hierarchy of departments and personnel
-- Include information about individuals such as their roles and contact information
-
+- Include information about individuals such as their roles and contact information.
 
 ```space-lua
 function prettyPrint(tbl, indent)

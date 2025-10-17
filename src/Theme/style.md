@@ -1,18 +1,10 @@
-# Malys Theme
-
-The Malys theme is a space-themed theme for SilverBullet. It brings the vibrant and playful colors of the space universe to your writing experience. The theme features a unique font, a dark background, and various customizations to enhance the overall space ambiance.
-
-The theme is designed to be easy to use and customize. It includes a wide range of customizable settings, allowing you to tailor the theme to your preferences.
-
-Feel free to explore the theme and its various features to create a writing environment that reflects your love for the cosmos!
-
 ---
 pageDecoration:
   prefix: "🎄 "
   disableTOC: true
 ---
-
-
+## Editor
+[Source](https://gist.github.com/vladstudio/749becce3470082292a066fc617f1904)
 
 ```space-style
 html {
@@ -104,13 +96,56 @@ html {
   color: salmon !important;
 }
 
+html {
+  --treeview-phone-height: 25vh;
+  --treeview-tablet-width: 25vw;
+  --treeview-tablet-height: 100vh;
+  --treeview-desktop-width: 20vw; 
+}
+
+.sb-bhs {
+  height: var(--treeview-phone-height);
+}
+```
+
+## Treeview
+```space-style
+.tree__label > span {
+  font-size: calc(11px + 0.1vh);
+}
+
+@media (min-width: 960px) {
+  #sb-root:has(.sb-lhs) #sb-main,
+  #sb-root:has(.sb-lhs) #sb-top {
+    margin-left: var(--treeview-tablet-width);
+  }
+
+  .sb-lhs {
+    position: fixed;
+    left: 0;
+    height: var(--treeview-tablet-height);
+    width: var(--treeview-tablet-width);
+    border-right: 1px solid var(--top-border-color);
+  }
+}
+
+@media (min-width: 1440px) {
+  #sb-root:has(.sb-lhs) #sb-main,
+  #sb-root:has(.sb-lhs) #sb-top {
+    margin-left: var(--treeview-desktop-width);
+  }
+
+  .sb-lhs {
+    width: var(--treeview-desktop-width);
+  }
+}
+```
+
 .tree__label > span {
     padding: 0 5px;
     font-size: 11px;
     line-height: 1.2;
 }
-```
-
 .treeview-root {
     --st-label-height: auto;
     --st-subnodes-padding-left: 0.1rem;
@@ -118,6 +153,17 @@ html {
     --st-collapse-icon-width: 1.25rem;
     --st-collapse-icon-size: 1rem;
 }
+
+## Outline
+
+```space-style
+div.cm-scroller {
+  scroll-behavior: smooth;
+  scrollbar-width: thin;
+}
+```
+
+## Example
 # 1 
 ## 2
 ### 3

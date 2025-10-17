@@ -1,12 +1,13 @@
-# SilverBullet Markdown Table + Formulajs evaluator
+# Md Table + Formulajs evaluator
 
-This feature allows you to embed dynamic formulas in your Markdown tables. You can use the `F` function to evaluate formulas and display their results in your tables.
+This feature allows you to embed dynamic formulas in your Markdown tables. You can use the \`F\` function to evaluate formulas and display their results in your tables.
 
-The `F` function takes two arguments:
-- `formulajs`: The formula to evaluate using the Formulajs library.
-- `label` (optional): A label to differentiate between the same formula in different tables.
+The \`F\` function takes two arguments:
+- \`formulajs\`: The formula to evaluate using the Formulajs library.
+- \`label\` (optional): A label to differentiate between the same formula in different tables.
 
-Here's an example usage: `${F("SUM(A1:A5)","1")}`
+Here's an example usage: \${F("SUM(A1:A5)","1")}\`
+
 
 ```space-lua
 -- ---------------------------
@@ -56,7 +57,7 @@ local formulajs = js.import("https://esm.sh/@formulajs/formulajs")
 -- ---------------------------
 -- Helpers: Column <-> Number
 -- ---------------------------
-function colToNumber(col)
+local function colToNumber(col)
   local n = 0
   for i = 1, string.len(col) do
     n = n * 26 + (string.byte(col,i) - string.byte('A') + 1)
@@ -64,7 +65,7 @@ function colToNumber(col)
   return n
 end
 
-function numberToColLetters(c)
+local function numberToColLetters(c)
   local s=""
   while c>0 do
     local r = (c-1)%26
@@ -77,7 +78,7 @@ end
 -- ---------------------------
 -- Expand ranges (A1:C3) into individual cell references
 -- ---------------------------
-function expandRange(range, cellMap)
+local function expandRange(range, cellMap)
   local colStart, rowStart, colEnd, rowEnd = string.match(range,"([A-Z]+)(%d+):([A-Z]+)(%d+)")
   if not colStart then error("Invalid range: "..range) end
   local sCol = colToNumber(colStart)
@@ -97,7 +98,7 @@ end
 -- ---------------------------
 -- Parse Markdown table into 2D array
 -- ---------------------------
-function extractTable(rows)
+local function extractTable(rows)
   local data = {}
   for _, row in ipairs(rows) do
     local rowData = {}
@@ -115,7 +116,7 @@ function extractTable(rows)
   return data
 end
 
-function extractTables(pageName)
+local function extractTables(pageName)
   if pageName==nil then pageName = editor.getCurrentPage() end
   local allRows = query[[from index.tag "table" where page == pageName ]]
   local tableGroups = {}
@@ -131,7 +132,7 @@ function extractTables(pageName)
 end
 
 -- Convert 2D table to A1-style cell map
-function toCellMap(tableData)
+local function toCellMap(tableData)
   local map={}
   for r,row in ipairs(tableData) do
     for c,val in ipairs(row) do

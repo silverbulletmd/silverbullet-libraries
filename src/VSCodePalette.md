@@ -1,3 +1,4 @@
+
 # VSCode Palette
 
 The VSCode Palette feature allows you to search and open content items (pages, commands, etc.) quickly. You can customize the objects to populate, like page, command, etc. The palette is a unique feature that provides a quick way to navigate your content.
@@ -71,7 +72,7 @@ local populate = function()
     if table.includes(vscode.enabledObjectToPopulate, kind) then
         local commands = system.listCommands()
         for name, def in pairs(commands) do
-            if #name > 3 then
+            if #name > 2 then
                 table.insert(options, {
                     name = ">" .. name,
                     description = def.description,
@@ -88,7 +89,7 @@ local populate = function()
         for _, item in ipairs(pages) do
             local id = item.text or item.name or item.page
             id = clean(id)
-            if #id > 3 then
+            if #id > 1 then
                 table.insert(options, {
                     name = "#" .. id,
                     description = item.page,
@@ -106,7 +107,7 @@ local populate = function()
         for _, item in ipairs(pages) do
             local id = item.text or item.name or item.page
             id = clean(id)
-            if #id > 3 then
+            if #id > 1 then
                 table.insert(options, {
                     name = "!" .. id,
                     description = item.page,
@@ -123,7 +124,7 @@ local populate = function()
         for _, item in ipairs(pages) do
             local id = item.text or item.name or item.page
             id = clean(id)
-            if #id > 3 then
+            if #id > 1 then
                 table.insert(options, {
                     name = "*" .. id,
                     description = item.page,
@@ -140,10 +141,22 @@ local populate = function()
     return options
 end
 
--- Listen for the pageCreating event and trigger the readyToSync function
-event.listen {name = "editor:pageCreating", run = function(e) readyToSync() end}
--- Listen for the secondPassed event and trigger the readyToSync function
-event.listen {name = "cron:secondPassed", run = function() readyToSync() end}
+event.listen {
+    name = "editor:pageCreating",
+    run = function()
+     readyToSync()
+    end
+}
+event.listen {
+    name = "cron:secondPassed",
+    run = function()
+     readyToSync()
+    end
+}
+
+
+vscode.entries = populate() -- Populate entries if time condition is met
+vscode.previousCheck = os.time() -- Update the last check time
 
 -- Define a command to open the VSCode palette
 command.define {
@@ -155,17 +168,19 @@ command.define {
         -- Get the help string for the search feature
         local help = getHelp()
         -- Filter the entries table based on the user's input
-        local selected = editor.filterBox("🎨", vscode.entries, help)
-        debug("selected", selected)
-        if selected then
-            -- If the user selected a command, invoke it
-            if selected.type == "command" then
-                system.invokeCommand(selected.ref)
-            else
-                -- Otherwise, navigate to the selected page
-                editor.navigate(selected.ref)
-            end
-        end
+        if vscode.entries ~=nil then
+          local selected = editor.filterBox("🎨", vscode.entries, help)
+          debug("selected", selected)
+          if selected then
+              -- If the user selected a command, invoke it
+              if selected.type == "command" then
+                  system.invokeCommand(selected.ref)
+              else
+                  -- Otherwise, navigate to the selected page
+                  editor.navigate(selected.ref)
+              end
+          end
+      end
     end
 }
 ```

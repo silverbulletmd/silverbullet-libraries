@@ -1,12 +1,6 @@
-# Fast Tag Navigation
+# Fast tag explorer
 
-This feature allows you to quickly navigate to pages and articles with specific tags.
-
-- Click on a tag to see all pages with that tag.
-- Click on a page to view it.
-- Use the "All Tags" button to see all pages.
-- Use the "No Tags" button to see all pages with no tags.
-
+From community, generate tags of children page
 
 ```space-style
 .fastnav-tags button {

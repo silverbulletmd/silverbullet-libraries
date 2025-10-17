@@ -1,24 +1,22 @@
-# Replace Placeholders
-
-The Replace Placeholders feature allows you to easily replace placeholders in your markdown content with specific values. You can use placeholders to customize your content dynamically.
-
-To use the Replace Placeholders feature:
-1. Add a YAML frontmatter block to the top of your markdown content.
-2. Define the placeholders you want to replace in the frontmatter block using the `replace` key.
-3. Use the placeholders in your markdown content by enclosing them in double underscores (e.g., `__placeholder__`).
-4. Run the Replace Placeholders command to replace the placeholders with the specified values.
-
-Note: The Replace Placeholders feature replaces placeholders in the entire markdown content of the current page.
-
-Example:
-
 ---
 replace: 
   t:  text 
   d: demonstration
 ---
 
+# Replace Placeholders
 
+The Replace Placeholders feature allows you to easily replace placeholders in your markdown content with specific values. You can use placeholders to customize your content dynamically.
+
+To use the Replace Placeholders feature:
+1. Add a YAML frontmatter block to the top of your markdown content.
+2. Define the placeholders you want to replace in the frontmatter block using the \`replace\` key.
+3. Use the placeholders in your markdown content by enclosing them in double underscores (e.g., `_placeholder_`).
+4. Run the Replace Placeholders command to replace the placeholders with the specified values.
+
+Note: The Replace Placeholders feature replaces placeholders in the entire markdown content of the current page.
+
+Example:
 ```space-lua
 function replaceValue(content, tags)
   local c= content
