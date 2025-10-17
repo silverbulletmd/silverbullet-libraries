@@ -1,6 +1,3 @@
----
-tags: function
----
 # External transclusion
 Transclude data form external resource.
 

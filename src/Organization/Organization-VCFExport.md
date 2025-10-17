@@ -62,8 +62,8 @@ end
 slashcommand.define {
   name = "organizationvcf",
   run = function()
-    editor.insertAtCursor(organizationVcf("work/scopandco/contact"), false, true)
+    editor.insertAtCursor(organizationVcf(config.get("organization.vcf.export.path")), false, true)
   end
 }
 ```
-${children("work/scopandco/contact")}
+

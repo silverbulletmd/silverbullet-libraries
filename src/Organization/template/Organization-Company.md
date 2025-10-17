@@ -9,22 +9,22 @@ frontmatter: |
   - company
   company:
     name: 
-    customer: true
+    customer: 
     site: 
     image:
     image_scale:
     size:
     city:
-    status: scop
-    action: todo
+    status: 
+    action: 
     domains:
-    - infogérance
+    - 
     services:
-    - logiciel libre
+    - 
     valeurs:
-    - ecologie
+    - 
     references:
-    - SNCF
+    - 
 pageDecoration:
   disableTOC: true
 ---

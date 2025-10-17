@@ -5,7 +5,7 @@ Create quickly child page.
 command.define {
   name = "new page",
   description = "new children page",
-  key = "Alt-Ctrl-n",
+  key = "Ctrl-n",
   run = function()
     local pageName=editor.prompt("page name",editor.getCurrentPage().."/")
     editor.navigate(pageName)

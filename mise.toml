@@ -1,36 +1,33 @@
 # Mise configuration file
 # https://mise.jdx.dev/configuration.html
 
-[tasks]
+[tasks.gen-readme]
 # Generate README.md based on available libraries
-gen-readme = "python scripts/generate_readme.py"
+run = "python scripts/generate_readme.py"
 
+[tasks.sync-libs]
 # Sync custom libraries from backup to src/
-sync-libs = "python scripts/sync_custom_libs.py"
+run = "python scripts/sync_custom_libs.py"
 
 # Run both sync and generate README
-update = [
-    "@sync-libs",
-    "@gen-readme"
+[tasks.update]
+depends  = [
+    "sync-libs",
+    "gen-readme"
 ]
 
 # Install Python dependencies
-setup = "pip install -r requirements.txt"
+[tasks.setup]
+run = "pip install -r requirements.txt"
 
 # Clean up Python cache files
-clean = "python -c \"import shutil; shutil.rmtree('__pycache__', ignore_errors=True); [shutil.rmtree(p, ignore_errors=True) for p in Path('.').rglob('__pycache__')]\""
+[tasks.clean]
+run = "python -c \"import shutil; shutil.rmtree('__pycache__', ignore_errors=True); [shutil.rmtree(p, ignore_errors=True) for p in Path('.').rglob('__pycache__')]\""
 
 # Run all checks
-check = [
-    "@clean",
-    "@sync-libs",
-    "@gen-readme"
+[tasks.check]
+depends  = [
+    "clean",
+    "sync-libs",
+    "gen-readme"
 ]
-
-[env]
-# Set Python version
-PYTHONUNBUFFERED = "1"
-PYTHONPATH = "."
-
-# Configure Python version (uncomment and set as needed)
-# python = "3.10"

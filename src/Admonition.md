@@ -1,5 +1,5 @@
 # Admonition
-From  community, enhance default admonition.
+From community, enhance default admonition.
 
 > **example** 
 >
@@ -76,9 +76,7 @@ admonitionList={
   "danger",
   "bug",
   "example",
-  "quote",
-  "warning",
-  "note"
+  "quote"
 }
 for i, v in ipairs(admonitionList) do
     slashcommand.define {

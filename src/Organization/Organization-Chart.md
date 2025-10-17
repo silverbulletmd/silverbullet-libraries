@@ -191,5 +191,3 @@ function person.insertImageFromFrontmatter()
 end
 ```
 
-
-\${organizationChart("work/ampere-regienov/contact") }

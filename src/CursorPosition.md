@@ -1,5 +1,7 @@
 # Wikilink of cursor position
 
+From community, get cursor position to clipboard.
+
 ```space-lua
 command.define {
   name = "Cursor: Copy Reference",
