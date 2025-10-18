@@ -4,7 +4,6 @@ A curated collection of plugins, templates, and utilities for [SilverBullet](htt
 
 ## 📦 Available Libraries
 
-- [Admonition](https://github.com/malys/silverbullet-libraries/blob/main/src/Admonition.md)
 - [Bashcode](https://github.com/malys/silverbullet-libraries/blob/main/src/BashCode.md)
 - [Breadcrumbs](https://github.com/malys/silverbullet-libraries/blob/main/src/Breadcrumbs.md)
 - [Cursorposition](https://github.com/malys/silverbullet-libraries/blob/main/src/CursorPosition.md)

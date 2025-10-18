@@ -9,11 +9,16 @@ run = "python scripts/generate_readme.py"
 # Sync custom libraries from backup to src/
 run = "python scripts/sync_custom_libs.py"
 
+# tasks git add and commit and push
+[tasks.git]
+run = "git add . && git commit -m 'update' && git push"
+
 # Run both sync and generate README
 [tasks.update]
 depends  = [
     "sync-libs",
-    "gen-readme"
+    "gen-readme",
+    "git"
 ]
 
 # Install Python dependencies
@@ -29,5 +34,6 @@ run = "python -c \"import shutil; shutil.rmtree('__pycache__', ignore_errors=Tru
 depends  = [
     "clean",
     "sync-libs",
-    "gen-readme"
+    "gen-readme",
+    "git"
 ]

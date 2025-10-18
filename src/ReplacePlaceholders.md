@@ -22,7 +22,7 @@ _d_ with this _t_ will be transformed to `demonstration with this text`
 
 
 ```space-lua
-function replaceValue(content, tags)
+local function replaceValue(content, tags)
   local c= content
   for k, v in pairs(tags) do
     local key="_"..k.."_"
@@ -31,12 +31,12 @@ function replaceValue(content, tags)
   return c
 end
 
-function getParent(path)
+local function getParent(path)
     local parent = path:match("^(.*)/[^/]+$")
     return parent
 end
 
-function getMeta(name)
+local function getMeta(name)
   local tagsToReplace= index.extractFrontmatter(space.readPage(name)).frontmatter--space.getPageMeta(name)
   local parent = getParent(name)
   if (tagsToReplace == nil or (tagsToReplace ~=nil and   tagsToReplace["replace"] ==nil)) and parent ~=nil then 
