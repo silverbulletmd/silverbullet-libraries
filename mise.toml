@@ -1,0 +1,39 @@
+# Mise configuration file
+# https://mise.jdx.dev/configuration.html
+
+[tasks.gen-readme]
+# Generate README.md based on available libraries
+run = "python scripts/generate_readme.py"
+
+[tasks.sync-libs]
+# Sync custom libraries from backup to src/
+run = "python scripts/sync_custom_libs.py"
+
+# tasks git add and commit and push
+[tasks.git]
+run = "git add . && git commit -m 'update' && git push"
+
+# Run both sync and generate README
+[tasks.update]
+depends  = [
+    "sync-libs",
+    "gen-readme",
+    "git"
+]
+
+# Install Python dependencies
+[tasks.setup]
+run = "pip install -r requirements.txt"
+
+# Clean up Python cache files
+[tasks.clean]
+run = "python -c \"import shutil; shutil.rmtree('__pycache__', ignore_errors=True); [shutil.rmtree(p, ignore_errors=True) for p in Path('.').rglob('__pycache__')]\""
+
+# Run all checks
+[tasks.check]
+depends  = [
+    "clean",
+    "sync-libs",
+    "gen-readme",
+    "git"
+]
