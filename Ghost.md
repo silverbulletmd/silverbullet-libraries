@@ -1,4 +1,4 @@
-#meta
+#meta/library
 
 Implements [[^Library/Std/Export]] for [Ghost](https://ghost.org/). Currently only posts are supported.
 
