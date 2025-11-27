@@ -1,5 +1,4 @@
-
-This is a collection of awesome SilverBullet libraries, currently containing:
+**IMPORTANT**: This library repo is deprecated. Rather than centralizing all libraries here, it's better to distribute them. Most of these libraries have now been moved to https://github.com/zefhemel/silverbullet-libraries
 
 # Available libraries
 * Git: Basic integration with Git
