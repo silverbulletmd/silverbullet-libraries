@@ -3,12 +3,12 @@ name: Library/silverbulletmd/Dashboard
 tags: meta/library
 description: Chips, bars, number cards and responsive grids for dashboards.
 ---
-Build dashboards with `widgets.chip`, `widgets.bars`, `widgets.stat` and `widgets.grid`. Use them in a [[Space Lua#Expressions|`${...}` expression]] or return them from a [[API/widget#Content functions|widget's `content` function]]. They use SilverBullet's built-in [[API/dom|DOM builder]] and theme colours and work in both Server and Desktop.
+Build dashboards with `widgets.chip`, `widgets.bars`, `widgets.stat` and `widgets.grid`. Use them in a [`${...}` expression](https://docs.silverbullet.md/Space%20Lua#Expressions) or return them from a [widget's `content` function](https://docs.silverbullet.md/API/widget). They use SilverBullet's built-in [DOM builder](https://docs.silverbullet.md/API/dom) and theme colours and work in both Server and Desktop.
 
-Install this page through [[Workbench/Libraries|Workbench → Libraries]] using its GitHub URL. These helpers were previously bundled in edge builds; their `widgets.*` names are unchanged.
+Install this page through **Workbench → Libraries** using its GitHub URL. These helpers were previously bundled in edge builds; their `widgets.*` names are unchanged.
 
 # Tones
-The visual widgets color by meaning to make theming easier. The same colours are available to your own CSS as `--tone-<name>` and `--tone-<name>-soft`, see [[Space Style#Tone colours]].
+The visual widgets color by meaning to make theming easier. The same colours are available to your own CSS as `--tone-<name>` and `--tone-<name>-soft`, see [Space Style](https://docs.silverbullet.md/Space%20Style).
 
 For a colour no tone covers, pass `color` with any CSS colour (`"#c0603a"`, `"teal"`, `"rgb(40 120 90)"`) instead: the widget uses that colour, with a light tint of it as the background, and `color` wins over `tone`. A literal colour stays the same in light and dark mode, so check it in both; prefer a tone where one fits. An invalid colour is ignored and the tone applies.
 
@@ -42,7 +42,7 @@ Examples:
 ${widgets.chip("shipped", { tone = "success" })} ${widgets.chip("blocked", { tone = "danger" })} ${widgets.chip("review", { tone = "info" })} ${widgets.chip("draft")}
 
 ## widgets.bars(rows, opts?)
-Horizontal bars, one per row, for counts or a distribution. `rows` is a list of tables or a [[Space Lua/Integrated Query|query]] result. Each row shows its label, a bar whose length is the value relative to the maximum, and the value. Block-level.
+Horizontal bars, one per row, for counts or a distribution. `rows` is a list of tables or a [query](https://docs.silverbullet.md/Space%20Lua/Integrated%20Query) result. Each row shows its label, a bar whose length is the value relative to the maximum, and the value. Block-level.
 
 | Option | Effect |
 | --- | --- |
@@ -96,9 +96,9 @@ Lays cells out side by side in columns: as many columns as fit across the page, 
 `items` is the list you want one cell each for. It can be used in two ways:
 
 * **Without `fn`, `items` are the cells.** Pass a list of ready-made widgets, and each becomes one cell.
-* **With `fn`, `items` is data and `fn(item)` builds the cell for each item.** This is the usual way with a [[Space Lua/Integrated Query|query]]: `items` is the query result, and `fn` is called once per item and returns the widget for it.
+* **With `fn`, `items` is data and `fn(item)` builds the cell for each item.** This is the usual way with a [query](https://docs.silverbullet.md/Space%20Lua/Integrated%20Query): `items` is the query result, and `fn` is called once per item and returns the widget for it.
 
-A cell can be any widget (`widgets.stat`, `widgets.chip`, `widget.html(...)`), a [[API/dom|DOM element]], or a string or number (shown as literal text). Cells keep their own click handlers.
+A cell can be any widget (`widgets.stat`, `widgets.chip`, `widget.html(...)`), a [DOM element](https://docs.silverbullet.md/API/dom), or a string or number (shown as literal text). Cells keep their own click handlers.
 
 | Option | Effect |
 | --- | --- |
@@ -138,7 +138,7 @@ end)
 
 # Implementation
 ## Chips, bars, stats and grids
-Built with the [[^Library/Std/APIs/DOM]] builder; labels go in as `dom.text`, so they stay literal. With `onClick` an element becomes a button (`role="button"`, focusable, Enter runs it too). Their CSS is in the Styles block below.
+Built with the [DOM](https://docs.silverbullet.md/API/dom) builder; labels go in as `dom.text`, so they stay literal. With `onClick` an element becomes a button (`role="button"`, focusable, Enter runs it too). Their CSS is in the Styles block below.
 ```space-lua
 -- priority: 10
 widgets = widgets or {}
