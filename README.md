@@ -19,14 +19,3 @@ Then install **Dashboard** from the available libraries. You can also install [D
 ## Development
 
 Keep library pages under `Library/silverbulletmd/` and list every library in [Repository/silverbulletmd.md](Repository/silverbulletmd.md). Library pages include their documentation, `space-lua` implementation and `space-style` styles.
-
-Tests use the real Space Lua runtime from a SilverBullet Server checkout. By default the checkout is expected at `../silverbullet` (as in the Desktop repository). For a standalone checkout, clone Server separately, install its npm dependencies, and set `SILVERBULLET_PATH` to its absolute path.
-
-```sh
-npm ci
-npm test
-# Or, with Server elsewhere:
-SILVERBULLET_PATH=/path/to/silverbullet npm test
-```
-
-GitHub Actions runs the same suite against Server’s `main` branch on pushes and pull requests.
