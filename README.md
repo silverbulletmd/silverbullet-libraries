@@ -7,10 +7,14 @@ Optional libraries maintained by the SilverBullet project, for both SilverBullet
 Open **Workbench → Libraries** and add this repository:
 
 ```
-https://github.com/silverbulletmd/silverbullet-libraries/blob/main/Repository/silverbulletmd.md
+github:silverbulletmd/silverbullet-libraries@main/Repository/silverbulletmd.md
 ```
 
-Then install **Dashboard** from the available libraries. You can also install [Dashboard](Library/silverbulletmd/Dashboard.md) directly using its GitHub URL.
+Then install **Dashboard** from the available libraries. You can also install [Dashboard](Library/silverbulletmd/Dashboard.md) directly using this URI:
+
+```
+github:silverbulletmd/silverbullet-libraries@main/Library/silverbulletmd/Dashboard.md
+```
 
 ## Available libraries
 
