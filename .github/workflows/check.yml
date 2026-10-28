@@ -1,0 +1,32 @@
+name: Check libraries
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/checkout@v5
+        with:
+          repository: silverbulletmd/silverbullet
+          ref: main
+          path: .server
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: |
+            package-lock.json
+            .server/package-lock.json
+      - run: npm ci
+        working-directory: .server
+      - run: npm ci
+      - run: npm test
+        env:
+          SILVERBULLET_PATH: ${{ github.workspace }}/.server
