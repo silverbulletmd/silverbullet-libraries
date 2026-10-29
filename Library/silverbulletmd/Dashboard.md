@@ -3,18 +3,18 @@ name: Library/silverbulletmd/Dashboard
 tags: meta/library
 description: Chips, bars, number cards and responsive grids for dashboards.
 ---
-Build dashboards with `widgets.chip`, `widgets.bars`, `widgets.stat` and `widgets.grid`. Use them in a [`${...}` expression](https://docs.silverbullet.md/Space%20Lua#Expressions) or return them from a [widget's `content` function](https://docs.silverbullet.md/API/widget). They use SilverBullet's built-in [DOM builder](https://docs.silverbullet.md/API/dom) and theme colours and work in both Server and Desktop.
-
-Install this page through **Workbench → Libraries** using its GitHub URL. These helpers were previously bundled in edge builds; their `widgets.*` names are unchanged.
+A set of widgets you can use to build “dashboard” like pages. 
 
 # Tones
 The visual widgets color by meaning to make theming easier. The same colours are available to your own CSS as `--tone-<name>` and `--tone-<name>-soft`, see [Space Style](https://docs.silverbullet.md/Space%20Style).
 
 For a colour no tone covers, pass `color` with any CSS colour (`"#c0603a"`, `"teal"`, `"rgb(40 120 90)"`) instead: the widget uses that colour, with a light tint of it as the background, and `color` wins over `tone`. A literal colour stays the same in light and dark mode, so check it in both; prefer a tone where one fits. An invalid colour is ignored and the tone applies.
 
+Examples:
+
 ${widgets.chip("info", { tone = "info" })} ${widgets.chip("#c0603a", { color = "#c0603a" })} ${widgets.chip("teal", { color = "teal" })}
 
-# Clicks
+# Click handling
 `widgets.chip`, `widgets.stat` and `widgets.bars` take an `onClick` function. With it, the element becomes clickable. For `widgets.bars` the function receives the row that was clicked. To open a page, navigate in the callback, e.g.:
 
 ```lua
