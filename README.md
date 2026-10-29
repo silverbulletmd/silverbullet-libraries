@@ -7,7 +7,7 @@ Optional libraries maintained by the SilverBullet project, for both SilverBullet
 Open **Workbench → Libraries** and add this repository:
 
 ```
-github:silverbulletmd/silverbullet-libraries@main/Repository/silverbulletmd.md
+github:silverbulletmd/silverbullet-libraries@main/Repository/SilverBulletMD.md
 ```
 
 Then install **Dashboard** from the available libraries. You can also install [Dashboard](Library/silverbulletmd/Dashboard.md) directly using this URI:
@@ -22,4 +22,4 @@ github:silverbulletmd/silverbullet-libraries@main/Library/silverbulletmd/Dashboa
 
 ## Development
 
-Keep library pages under `Library/silverbulletmd/` and list every library in [Repository/silverbulletmd.md](Repository/silverbulletmd.md). Library pages include their documentation, `space-lua` implementation and `space-style` styles.
+Keep library pages under `Library/silverbulletmd/` and list every library in [Repository/SilverBulletMD.md](Repository/SilverBulletMD.md). Library pages include their documentation, `space-lua` implementation and `space-style` styles.

@@ -1,5 +1,5 @@
 ---
-name: Repository/silverbulletmd
+name: Repositories/SilverBulletMD
 tags: meta/repository
 ---
 Optional libraries maintained by the SilverBullet project.
