@@ -120,13 +120,13 @@ Reads the remote and compares it with what each member would send, like `share.c
 ## share.publishCollection(name)
 Publishes a collection, the same as `Share: Collection`: first prepares the root’s transport with `share.ensureTransport` (which may ask to connect or sign in), so the members’ URIs are those of the root’s `share:target` even when the transport was set up just now. Then resolves the collection and transforms every member with the collection as the share set (afresh, so baked content is current, see `members` of `share.transform`), lists the root (letting the provider sign in, `{signIn = true}`), writes the members whose text differs from the remote (by the listed `hash`, or else by reading the member’s remote, one that can’t be read is written) and offers the listed files no member maps to for removal with `editor.pickMany`, every item unticked. Only ticked files are deleted. Writes and deletes go in one call to a `share:writeBatch:<root>` service when the root has one, and otherwise through `net.writeURI` and `net.deleteURI` one by one.
 
-Returns `{written, unchanged, removed, failed, cancelled?}`: the pages written, the pages left alone, the URIs deleted, and `{page?, uri, error}` for each write or delete that failed. `cancelled` is true when the batch service reported that the user cancelled it (for example dismissing GitHub’s commit message prompt): then nothing was written or deleted, and nothing counts as failed. A failed member’s remote still differs, so the next publish tries it again. Errors before anything is written: a failing listing or a broken collection (see `share.collection`).
+Returns `{written, unchanged, removed, failed, canceled?}`: the pages written, the pages left alone, the URIs deleted, and `{page?, uri, error}` for each write or delete that failed. `canceled` is true when the batch service reported that the user canceled it (for example dismissing GitHub’s commit message prompt): then nothing was written or deleted, and nothing counts as failed. A failed member’s remote still differs, so the next publish tries it again. Errors before anything is written: a failing listing or a broken collection (see `share.collection`).
 
 ## share.changedCollections()
 Returns the names of the collections `Share: All Changed` publishes: those with a member that is `missing` or `differs` by `share.checkCollection` (so their remotes are read). A collection whose check fails is left out, for its own publish to report.
 
 ## share.notifyPublished(name, ok, result)
-Tells the user how a publish went, from what `pcall(share.publishCollection, name)` returned: `Published <name>: N written, M unchanged` (and `, K removed`), and the first failure as an error, or `Publish of <name> cancelled` when the user cancelled the batch.
+Tells the user how a publish went, from what `pcall(share.publishCollection, name)` returned: `Published <name>: N written, M unchanged` (and `, K removed`), and the first failure as an error, or `Publish of <name> canceled` when the user canceled the batch.
 
 ## share.collectionFailure(f)
 Returns one entry of the `failed` list of `share.publishCollection` as text: its page (or URI) and error.
@@ -380,8 +380,8 @@ local function sendBatch(match, c, writes, deletes, result)
   end
   local ok, err = pcall(service.invoke, match, payload)
   -- The user dismissed the batch (e.g. GitHub's commit message prompt)
-  if ok and type(err) == "table" and err.cancelled then
-    result.cancelled = true
+  if ok and type(err) == "table" and err.canceled then
+    result.canceled = true
     return
   end
   if not ok then
@@ -422,7 +422,7 @@ end
 -- those no member maps to: in one call to a share:writeBatch service where
 -- the target has one. Failed writes and deletes are in failed ({page?, uri,
 -- error}); their remotes still differ, so the next publish retries them.
--- A batch the user cancelled writes nothing and sets cancelled.
+-- A batch the user canceled writes nothing and sets canceled.
 function share.publishCollection(name)
   -- First, so the target (and so the member URIs) is that of a transport
   -- set up just now
@@ -487,8 +487,8 @@ function share.notifyPublished(name, ok, r)
     editor.flashNotification("Error: " .. r, "error")
     return
   end
-  if r.cancelled then
-    editor.flashNotification("Publish of " .. name .. " cancelled")
+  if r.canceled then
+    editor.flashNotification("Publish of " .. name .. " canceled")
     return
   end
   local summary = "Published " .. name .. ": " .. #r.written .. " written, "
@@ -608,7 +608,7 @@ command.define {
       local ok, r = pcall(share.publishCollection, name)
       if not ok then
         failed(name, tostring(r))
-      elseif r.cancelled then
+      elseif r.canceled then
         -- Neither shared nor failed: the user knows
       elseif #r.failed > 0 then
         failed(name, share.collectionFailure(r.failed[1]))

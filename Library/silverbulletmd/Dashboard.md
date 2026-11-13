@@ -6,9 +6,9 @@ description: Chips, bars, number cards and responsive grids for dashboards.
 A set of widgets you can use to build “dashboard” like pages. 
 
 # Tones
-The visual widgets color by meaning to make theming easier. The same colours are available to your own CSS as `--tone-<name>` and `--tone-<name>-soft`, see [Space Style](https://docs.silverbullet.md/Space%20Style).
+The visual widgets color by meaning to make theming easier. The same colors are available to your own CSS as `--tone-<name>` and `--tone-<name>-soft`, see [Space Style](https://docs.silverbullet.md/Space%20Style).
 
-For a colour no tone covers, pass `color` with any CSS colour (`"#c0603a"`, `"teal"`, `"rgb(40 120 90)"`) instead: the widget uses that colour, with a light tint of it as the background, and `color` wins over `tone`. A literal colour stays the same in light and dark mode, so check it in both; prefer a tone where one fits. An invalid colour is ignored and the tone applies.
+For a color no tone covers, pass `color` with any CSS color (`"#c0603a"`, `"teal"`, `"rgb(40 120 90)"`) instead: the widget uses that color, with a light tint of it as the background, and `color` wins over `tone`. A literal color stays the same in light and dark mode, so check it in both; prefer a tone where one fits. An invalid color is ignored and the tone applies.
 
 Examples:
 
@@ -34,7 +34,7 @@ A small rounded label, shaped like a hashtag, for statuses and categories. Inlin
 | Option | Effect |
 | --- | --- |
 | `tone` | Tone name; default `neutral`. An unknown name falls back to `neutral`. |
-| `color` | A CSS colour, used instead of the tone. |
+| `color` | A CSS color, used instead of the tone. |
 | `title` | Tooltip. |
 | `onClick` | Function run when the chip is clicked. |
 
@@ -49,7 +49,7 @@ Horizontal bars, one per row, for counts or a distribution. `rows` is a list of 
 | `label` | Field name holding the label, or a function of the row; default `"label"`. |
 | `value` | Field name holding the number, or a function of the row; default `"value"`. |
 | `tone` | Tone name, or a function of the row returning one; default the row's own `tone` field, else `accent`. |
-| `color` | A CSS colour, or a function of the row returning one, used instead of the tone; default the row's own `color` field. |
+| `color` | A CSS color, or a function of the row returning one, used instead of the tone; default the row's own `color` field. |
 | `max` | The value that fills the whole width; default the largest value. |
 | `onClick` | Function run with the row when it is clicked. |
 
@@ -78,8 +78,8 @@ A number card: a label, a large value and an optional caption and progress bar.
 
 | Option | Effect |
 | --- | --- |
-| `tone` | Colours the value and the bar; default `neutral` (plain text colour). |
-| `color` | A CSS colour, used instead of the tone. |
+| `tone` | Colors the value and the bar; default `neutral` (plain text color). |
+| `color` | A CSS color, used instead of the tone. |
 | `sub` | Caption below the value. |
 | `bar` | A fraction from 0 to 1, drawn as a thin progress bar (clamped). |
 | `onClick` | Function run when the card is clicked. |
@@ -148,17 +148,17 @@ local tones = {
   info = true, neutral = true, accent = true,
 }
 
-local function isColour(value)
+local function isColor(value)
   if type(value) ~= "string" or value == "" then return false end
   local css = js.window.CSS
   if css and css.supports then return css.supports("color", value) end
   return true
 end
 
--- The class and style for a literal CSS colour if valid, else a tone name,
+-- The class and style for a literal CSS color if valid, else a tone name,
 -- else the default tone
 local function toneOf(tone, color, default)
-  if isColour(color) then
+  if isColor(color) then
     return "sb-tone-custom", {
       ["--sb-tone"] = color,
       ["--sb-tone-soft"] = "color-mix(in srgb, " .. color .. " 16%, transparent)",
@@ -203,9 +203,9 @@ local function empty(message)
   return widget.htmlBlock(dom.div { class = "sb-empty", dom.text(message) })
 end
 
---- Renders a small rounded label in a tone colour
+--- Renders a small rounded label in a tone color
 --- @param label string the text to show
---- @param opts? table `tone` (default "neutral"), `color` (CSS colour, used instead of the tone), `title` (tooltip), `onClick` (function run on click)
+--- @param opts? table `tone` (default "neutral"), `color` (CSS color, used instead of the tone), `title` (tooltip), `onClick` (function run on click)
 --- @return table an inline widget
 --- @see Library/silverbulletmd/Dashboard
 function widgets.chip(label, opts)
@@ -221,7 +221,7 @@ end
 
 --- Renders horizontal bars for counts or a distribution, one per row.
 --- @param rows table a list or query result
---- @param opts? table `label`, `value` (field names or functions, default "label" and "value"), `tone` (name or function of the row, default the row's `tone` field, else "accent"), `color` (CSS colour or function of the row, used instead of the tone; default the row's `color` field), `max` (full-width value, default the largest), `onClick` (function run with the clicked row)
+--- @param opts? table `label`, `value` (field names or functions, default "label" and "value"), `tone` (name or function of the row, default the row's `tone` field, else "accent"), `color` (CSS color or function of the row, used instead of the tone; default the row's `color` field), `max` (full-width value, default the largest), `onClick` (function run with the clicked row)
 --- @return table a block widget
 --- @see Library/silverbulletmd/Dashboard
 function widgets.bars(rows, opts)
@@ -278,7 +278,7 @@ end
 --- Renders a number card, for use alone or in `widgets.grid`.
 --- @param label string what the number is
 --- @param value any the number (or short text) to show
---- @param opts? table `tone` (default "neutral"), `color` (CSS colour, used instead of the tone), `sub` (caption), `bar` (fraction 0..1 drawn as a thin bar), `onClick` (function run on click)
+--- @param opts? table `tone` (default "neutral"), `color` (CSS color, used instead of the tone), `sub` (caption), `bar` (fraction 0..1 drawn as a thin bar), `onClick` (function run on click)
 --- @return table a block widget
 --- @see Library/silverbulletmd/Dashboard
 function widgets.stat(label, value, opts)
@@ -337,7 +337,7 @@ end
 
 ### Styles
 ```space-style
-/* Colours come from the tone tokens (Space Style#Tone colours), so both
+/* Colors come from the tone tokens (Space Style#Tone colors), so both
    themes work; `color` sets --sb-tone/--sb-tone-soft inline instead. */
 .sb-tone-success { --sb-tone: var(--tone-success); --sb-tone-soft: var(--tone-success-soft); }
 .sb-tone-warning { --sb-tone: var(--tone-warning); --sb-tone-soft: var(--tone-warning-soft); }
@@ -347,7 +347,7 @@ end
 .sb-tone-accent { --sb-tone: var(--tone-accent); --sb-tone-soft: var(--tone-accent-soft); }
 
 /* Chips share the hashtag's geometry (editor.scss .sb-hashtag) so they sit in
-   running text like tags do; the tone only sets the colours. */
+   running text like tags do; the tone only sets the colors. */
 .sb-chip {
   display: inline-block;
   padding: 0 4px;
@@ -423,7 +423,7 @@ end
 }
 
 /* Stat cards are flat surfaces like page widgets: a hairline border, no
-   fill; the tone colours the number (except neutral) and the optional bar. */
+   fill; the tone colors the number (except neutral) and the optional bar. */
 .sb-stat {
   display: block;
   box-sizing: border-box;

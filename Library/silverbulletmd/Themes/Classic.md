@@ -6,7 +6,7 @@ files:
 - Classic/Light.md
 - Classic/Dark.md
 ---
-**SilverBullet Classic** brings back SilverBullet's original look: iA Writer Mono for your pages, a grey top bar, blue links on a light tint, filled hashtag pills and a dark table header. [[Library/silverbulletmd/Themes/Classic/Light|SilverBullet Classic]] is the light theme and [[Library/silverbulletmd/Themes/Classic/Dark|SilverBullet Classic Dark]] the dark one.
+**SilverBullet Classic** brings back SilverBullet's original look: iA Writer Mono for your pages, a gray top bar, blue links on a light tint, filled hashtag pills and a dark table header. [[Library/silverbulletmd/Themes/Classic/Light|SilverBullet Classic]] is the light theme and [[Library/silverbulletmd/Themes/Classic/Dark|SilverBullet Classic Dark]] the dark one.
 
 Pick either in Configuration → Appearance → Theme, or with ${widgets.commandButton("Theme: Select")}. ${widgets.commandButton("Theme: Toggle Light/Dark")} switches between the two.
 

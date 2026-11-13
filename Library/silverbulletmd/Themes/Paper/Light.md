@@ -46,12 +46,12 @@ html {
   --editor-code-number-color: #8f5a14;
   --editor-code-operator-color: #7d6d5b;
   --editor-code-atom-color: #a8432f;
-  /* Comments are read, not skimmed: the faint markup colour is too light on paper */
+  /* Comments are read, not skimmed: the faint markup color is too light on paper */
   --editor-code-comment-color: var(--subtle-color);
 
-  /* Headings in full ink: the default greys them toward the subtle colour */
+  /* Headings in full ink: the default grays them toward the subtle color */
   --editor-heading-color: var(--paper-ink);
-  /* Thin rules in the paper's own hairline, not a dark grey bar */
+  /* Thin rules in the paper's own hairline, not a dark gray bar */
   --editor-ruler-color: var(--paper-rule);
   --editor-blockquote-border-color: color-mix(in srgb, var(--paper-rule), var(--paper-ink) 25%);
   /* A tinted head row like a printed table, not the default inverted dark band */

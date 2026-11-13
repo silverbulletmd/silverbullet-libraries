@@ -47,9 +47,9 @@ html {
   --editor-code-operator-color: #a39584;
   --editor-code-atom-color: #e08a6c;
 
-  /* Headings in full ink: the default greys them toward the subtle colour */
+  /* Headings in full ink: the default grays them toward the subtle color */
   --editor-heading-color: var(--paper-ink);
-  /* Thin rules in the paper's own hairline, not a dark grey bar */
+  /* Thin rules in the paper's own hairline, not a dark gray bar */
   --editor-ruler-color: color-mix(in srgb, var(--paper-rule), var(--paper-ink) 15%);
   --editor-blockquote-border-color: color-mix(in srgb, var(--paper-rule), var(--paper-ink) 25%);
   /* Tags as soft, round accent-tinted pills instead of solid ones */
