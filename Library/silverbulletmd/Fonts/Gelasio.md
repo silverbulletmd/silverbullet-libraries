@@ -11,7 +11,7 @@ files:
 
 Georgia itself can't be shipped (Microsoft's license doesn't allow it), so Gelasio is the way to get a Georgia-like page on every device, including Linux and Android, where Georgia usually isn't installed. To use the Georgia that comes with macOS, Windows and iOS instead, install the [[Library/silverbulletmd/Fonts/Georgia|Georgia]] library.
 
-Installing this library adds Gelasio to the fonts in Configuration → Appearance. Choose it as the Editor font (or Interface font) there, or in [[CONFIG]] with `config.set("fonts.editor", "gelasio")`. The font files install into your space, so it works offline and loads nothing from elsewhere; a browser only downloads a style once text uses it. Each style is one variable font file that covers every weight.
+Installing this library adds Gelasio to the fonts in Configuration → Appearance. Choose it as the Editor font there, or in [[Library/Config]] with `config.set("fonts.editor", "gelasio")`. The font files install into your space, so it works offline and loads nothing from elsewhere; a browser only downloads a style once text uses it. Each style is one variable font file that covers every weight.
 
 # License
 Gelasio is licensed under the SIL Open Font License 1.1; the license text ships alongside the font files as `Gelasio/OFL.txt`. The files are byte for byte the project's own (only renamed, dropping the `[wght]` part that URLs handle badly) from https://github.com/google/fonts/tree/main/ofl/gelasio (Gelasio-Variable.ttf 168,556 bytes; Gelasio-Italic-Variable.ttf 174,212 bytes).

@@ -11,7 +11,7 @@ files:
 ---
 **iA Writer Quattro** is the proportional member of the iA Writer family by Information Architects, built on IBM Plex. Its letters have four widths instead of mono's one, so it keeps the even, typewriter-like rhythm of iA Writer Mono (SilverBullet's default font) while setting text more tightly. It suits you if you like the default but want prose to read less like code.
 
-Installing this library adds iA Writer Quattro to the fonts in Configuration → Appearance. Choose it as the Editor font (or Interface font) there, or in [[CONFIG]] with `config.set("fonts.editor", "ia-writer-quattro")`. The font files install into your space, so it works offline and loads nothing from elsewhere; a browser only downloads a style once text uses it.
+Installing this library adds iA Writer Quattro to the fonts in Configuration → Appearance. Choose it as the Editor font there, or in [[Library/Config]] with `config.set("fonts.editor", "ia-writer-quattro")`. The font files install into your space, so it works offline and loads nothing from elsewhere; a browser only downloads a style once text uses it.
 
 # License
 iA Writer Quattro is licensed under the SIL Open Font License 1.1, with Reserved Font Names “iA Writer” and “Plex”; the license text ships alongside the font files as `iAWriterQuattro/LICENSE.md`. The files are byte for byte iA's own webfonts from https://github.com/iaolo/iA-Fonts/tree/master/iA%20Writer%20Quattro/Webfonts (Regular 44,416 bytes; Bold 45,252; Italic 41,152; Bold Italic 41,616).

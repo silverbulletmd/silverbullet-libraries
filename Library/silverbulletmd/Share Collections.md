@@ -13,7 +13,7 @@ Builds on [Share](https://docs.silverbullet.md/Share) for publishing many pages 
 Sharing a single page with `Share: Page` is part of SilverBullet itself and needs no library.
 
 # Collections
-Define collections in a `space-lua` block in [[CONFIG]] rather than with frontmatter:
+Define collections in a `space-lua` block in [[Library/Config]] rather than with frontmatter:
 
 ```lua
 config.set("share.collections", {
