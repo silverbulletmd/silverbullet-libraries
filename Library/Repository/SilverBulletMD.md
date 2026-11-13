@@ -79,7 +79,7 @@ requires:
 ```#meta/library/remote
 name: Classic
 author: SilverBullet
-description: SilverBullet's original look, as a light and dark theme pair: iA Writer Mono, a gray top bar and tinted links.
+description: "SilverBullet's original look, as a light and dark theme pair: iA Writer Mono, a gray top bar and tinted links."
 uri: github:silverbulletmd/silverbullet-libraries@main/Library/silverbulletmd/Themes/Classic.md
 ```
 
