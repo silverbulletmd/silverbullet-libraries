@@ -413,6 +413,11 @@ function pele.diagram(source, opts)
       click = function(e)
         local ok, internal, href = pcall(function()
           local t = e.data.target
+          -- When zoomed in, Pele captures the pointer for panning, so the
+          -- click lands on the container: use what's under the cursor instead
+          if not t.closest("a, .pele-node") then
+            t = js.window.document.elementFromPoint(e.data.clientX, e.data.clientY) or t
+          end
           local a = t.closest("a")
           -- An internal-link node only wraps its label text in the link, so a
           -- click anywhere else on the node looks the link up from the node
