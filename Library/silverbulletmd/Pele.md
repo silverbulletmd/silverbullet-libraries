@@ -42,7 +42,7 @@ Write a fenced `mermaid` block and move your cursor out of it:
 Put your cursor in a diagram to edit its source. Errors show the line and column Pele got stuck on.
 
 ## Links
-Clicking a linked node navigates within your space. Two ways to link a node:
+Clicking a linked node navigates within your space; Ctrl/Cmd-click opens it in a new window. Two ways to link a node:
 
 * `click A "Some Page"`: links node `A` to the page *Some Page*. Use `#quot;` for a `"` in a page name, and start a name that has a colon with `./` (`click A "./ADR:001"`), or Pele reads it as a web address.
 * `class A internal-link`: links node `A` to the page named by its label (as in Obsidian).
@@ -56,14 +56,14 @@ Diagrams can be generated from your space's data and redraw when it changes, lik
       pages = query[[from index.pages("adr")]],
     })}
 
-Because a view returns text, you can also look at it, adjust it, or paste it into a static block.
+Because a view returns text, you can also look at it, adjust it, or paste it into a static block. Sizing goes in `pele.diagram`'s options, not the view: `pele.diagram(pele.timeline{…}, { maxWidth = 600 })`.
 
 # API
 ## pele.diagram(source, opts)
 Renders Mermaid `source` as a widget. `opts` *(optional)* is passed to Pele:
 
 * `zoom`: `"auto"` (default; zoom and pan only when the diagram is shrunk to fit), `true` or `false`.
-* `maxWidth`: maximum width in pixels.
+* `maxWidth`: maximum width in pixels (a number, e.g. `600`).
 * `fontSize`: base font size in pixels (default 16).
 * `autoDirection`: on by default, so Pele turns wide flowcharts vertical when they don't fit; `false` keeps the direction as written.
 * `padding`: padding around the diagram in pixels.
@@ -73,11 +73,16 @@ Renders Mermaid `source` as a widget. `opts` *(optional)* is passed to Pele:
 A flowchart of frontmatter relations between pages. Nodes are labeled with the last segment of the page name, and clicking one opens the page.
 
 * `pages`: the pages to draw, e.g. `query[[from index.pages("adr")]]`.
-* `relations` *(optional)*: frontmatter fields holding `[[page]]` links to draw as edges, e.g. `{"dependsOn", "related"}`. When omitted, every field whose values are `[[links]]` to pages in the set becomes an edge, labeled with the field name. `supersededBy` edges are dotted.
-* `groupBy` *(optional)*: a field naming a container page; pages nest inside their container's box.
+* `relations` *(optional)*: frontmatter fields holding `[[page]]` links to draw as edges, e.g. `{"dependsOn", "related"}`. When omitted, every field whose values are `[[links]]` to pages in the set becomes an edge, labeled with the field name. `supersededBy` edges are dotted. Quote links in frontmatter (`dependsOn: "[[Page]]"`): that's the form YAML keeps as text.
+* `groupBy` *(optional)*: a field naming a container page; pages nest inside a box with their container as its first node, as many levels deep as you like.
 * `direction` *(optional)*: `"LR"` (default), `"TD"`, `"RL"` or `"BT"`.
-* `color` *(optional)*: a field whose value becomes a CSS class on the node (`:::value`). Add matching `classDef` lines to style them.
-* `max` *(optional, default 60)*: node limit.
+* `color` *(optional)*: a field whose value becomes a class on the node, passed through `pele.id` (so `In Progress` becomes `In_Progress`). Append `classDef` lines to style them:
+
+      ${pele.diagram(pele.relationGraph{
+        pages = query[[from index.pages("adr")]],
+        color = "status",
+      } .. "\n  classDef accepted fill:#d3f0d6\n  classDef proposed fill:#fdf0c4")}
+* `max` *(optional, default 60)*: node limit. A final node says how many pages were left out.
 
 ## pele.timeline(spec)
 A timeline of pages by a date field.
@@ -87,7 +92,7 @@ A timeline of pages by a date field.
 * `groupBy` *(default `"year"`)*: `"year"` groups entries under their year; `"none"` gives one entry per date.
 * `labelField` *(optional)*: a field to use as the entry label, instead of the page name.
 * `title` *(optional)*: the diagram title.
-* `max` *(optional, default 100)*: entry limit.
+* `max` *(optional, default 100)*: entry limit. The title says how many entries are shown when some are left out.
 
 ## pele.distribution(spec)
 A pie chart counting pages by a field, largest slice first. A list field, such as `tags`, counts each item.
@@ -99,8 +104,8 @@ A pie chart counting pages by a field, largest slice first. A list field, such a
 * `showData` *(optional)*: show the counts next to the slices.
 
 ## Helpers
-* `pele.id(text)`: a valid Mermaid node id for any text.
-* `pele.label(text)`: `text` as a quoted Mermaid label, with `"` escaped.
+* `pele.id(text)`: a valid Mermaid id or class name for any text. Characters other than letters, digits and `_` become `_`, so different texts can share an id; Mermaid keywords such as `end` get an `n_` prefix.
+* `pele.label(text)`: `text` as a quoted Mermaid label, with `"` and `#` escaped.
 * `pele.supports(source)`: whether Pele can draw `source`.
 * `pele.detectType(source)`: the diagram type of `source`, such as `"flowchart"`, or `nil`.
 
@@ -391,6 +396,9 @@ function pele.load()
 end
 
 function pele.diagram(source, opts)
+  if type(source) ~= "string" then
+    error("pele.diagram: source must be a string, got " .. type(source))
+  end
   local m = pele.load()
   local div = js.window.document.createElement("div")
   div.className = "sb-pele"
@@ -404,7 +412,14 @@ function pele.diagram(source, opts)
     events = {
       click = function(e)
         local ok, internal, href = pcall(function()
-          local a = e.data.target.closest("a")
+          local t = e.data.target
+          local a = t.closest("a")
+          -- An internal-link node only wraps its label text in the link, so a
+          -- click anywhere else on the node looks the link up from the node
+          if not a then
+            local node = t.closest(".pele-node")
+            if node then a = node.querySelector("a") end
+          end
           if not a then return nil end
           return a.getAttribute("data-href"), a.getAttribute("href")
         end)
@@ -429,7 +444,12 @@ function pele.diagram(source, opts)
         target = string.match(target, "^%[%[(.*)%]%]$") or target
         -- "./" lets a click target like "ADR:001" pass Pele's scheme check
         target = string.match(target, "^%./(.*)$") or target
-        editor.navigate(target)
+        -- Ctrl/Cmd-click opens a new window, as other links in SilverBullet do
+        local newWindow = e.data.ctrlKey or e.data.metaKey
+        local navigated, err = pcall(editor.navigate, target, false, newWindow)
+        if not navigated then
+          editor.flashNotification("Can't open " .. target .. ": " .. tostring(err), "error")
+        end
       end,
     },
   }
@@ -437,16 +457,38 @@ end
 
 -- Text helpers ------------------------------------------------------------
 
--- A valid Mermaid identifier for an arbitrary string.
+-- Words Mermaid reads as keywords, so they can't be ids or class names
+local RESERVED = {
+  ["end"] = true, ["class"] = true, ["classdef"] = true, ["style"] = true,
+  ["linkstyle"] = true, ["subgraph"] = true, ["graph"] = true,
+  ["flowchart"] = true, ["click"] = true, ["call"] = true, ["href"] = true,
+  ["direction"] = true, ["default"] = true,
+}
+
+-- A valid Mermaid identifier for an arbitrary string. Characters other than
+-- letters, digits and `_` become `_`, so different texts can share an id.
 function pele.id(raw)
   local id = string.gsub(tostring(raw), "[^%w_]", "_")
-  if not string.match(id, "^[%a_]") then id = "n_" .. id end
+  if not string.match(id, "^[%a_]") or RESERVED[string.lower(id)] then
+    id = "n_" .. id
+  end
   return id
 end
 
--- A double-quoted Mermaid label; `"` becomes Mermaid's #quot; entity.
+-- A double-quoted Mermaid label. `#` and `"` become Mermaid entities, so text
+-- like "#59;" stays literal.
 function pele.label(text)
-  return '"' .. string.gsub(tostring(text), '"', "#quot;") .. '"'
+  local s = string.gsub(tostring(text), "#", "#35;")
+  s = string.gsub(s, '"', "#quot;")
+  return '"' .. s .. '"'
+end
+
+-- Text for a line-based position (titles, timeline entries): one line, and no
+-- `%%`, which would start a comment.
+local function oneLine(text)
+  local s = string.gsub(tostring(text), "[\r\n]+", " ")
+  s = string.gsub(s, "%%%%", function() return "% %" end)
+  return s
 end
 
 function pele.supports(source)
@@ -461,13 +503,14 @@ local function shortName(name)
   return (string.match(name, "[^/]+$")) or name
 end
 
--- Strip surrounding [[ ]] from a link value (first value of a list).
+-- The page a link value points to: "[[Page]]", "[[Page|alias]]",
+-- "[[Page#Header]]" or "Page"; for a list, its first value. Unquoted
+-- [[Page]] in YAML arrives as a nested list, which this unwraps too.
 local function deref(v)
-  if type(v) == "table" then v = v[1] end
+  while type(v) == "table" do v = v[1] end
   if type(v) ~= "string" then return nil end
-  v = string.gsub(v, "^%[%[", "")
-  v = string.gsub(v, "%]%]$", "")
-  return v
+  v = string.match(v, "^%[%[(.-)%]%]$") or v
+  return (string.match(v, "^([^|#]*)"))
 end
 
 -- Views: Mermaid source built from the object index ------------------------
@@ -479,10 +522,10 @@ function pele.relationGraph(spec)
   local max = spec.max or 60
 
   local pages = {}
-  for _, p in ipairs(spec.pages or {}) do pages[#pages + 1] = p end
-  table.sort(pages, function(a, b)
-    return string.lower(a.name or "") < string.lower(b.name or "")
-  end)
+  for _, p in ipairs(spec.pages or {}) do
+    if type(p) == "table" and type(p.name) == "string" then pages[#pages + 1] = p end
+  end
+  table.sort(pages, function(a, b) return string.lower(a.name) < string.lower(b.name) end)
 
   local idOf, order = {}, {}
   for _, p in ipairs(pages) do
@@ -494,14 +537,16 @@ function pele.relationGraph(spec)
   local lines = { "flowchart " .. (spec.direction or "LR") }
   local function node(p, indent)
     local cls = spec.color and p[spec.color]
+    if type(cls) == "table" then cls = cls[1] end
     lines[#lines + 1] = indent .. idOf[p.name] .. "(" .. pele.label(shortName(p.name)) .. ")" ..
-      (cls and (":::" .. pele.id(cls)) or "")
+      ((cls ~= nil and cls ~= "") and (":::" .. pele.id(cls)) or "")
     -- "./" keeps Pele from reading a name like "ADR:001" as a URL scheme
     lines[#lines + 1] = indent .. "click " .. idOf[p.name] .. " " .. pele.label("./" .. p.name)
   end
 
-  -- Pages others point to with `groupBy` become subgraphs around them,
-  -- nested as deep as the containers go
+  -- Pages others point to with `groupBy` become boxes around them, nested as
+  -- deep as the containers go. The container itself is the box's first node,
+  -- so it can be clicked, colored and linked to like any other page.
   local childrenOf, hasParent = {}, {}
   if groupBy then
     for _, p in ipairs(order) do
@@ -522,7 +567,8 @@ function pele.relationGraph(spec)
       node(p, indent)
       return
     end
-    lines[#lines + 1] = indent .. "subgraph " .. idOf[p.name] .. " [" .. pele.label(shortName(p.name)) .. "]"
+    lines[#lines + 1] = indent .. "subgraph " .. idOf[p.name] .. "_box [\" \"]"
+    node(p, indent .. "  ")
     for _, child in ipairs(children) do emit(child, indent .. "  ") end
     lines[#lines + 1] = indent .. "end"
   end
@@ -532,17 +578,22 @@ function pele.relationGraph(spec)
   -- Whatever is left belongs to a groupBy cycle
   for _, p in ipairs(order) do emit(p, "  ") end
 
-  -- In auto mode only [[link]] values count; named relations take any value
+  -- The page a relation value links to. In auto mode only [[links]] count
+  -- (quoted, or unquoted, which YAML reads as a nested list); named relations
+  -- take any value.
+  local function linkTarget(t, requireLink)
+    if type(t) == "table" then return deref(t) end
+    if type(t) ~= "string" then return nil end
+    if requireLink and not string.match(t, "^%[%[") then return nil end
+    return deref(t)
+  end
   local function addEdges(fromId, field, value, requireLink)
-    if type(value) == "string" then value = { value } end
-    if type(value) ~= "table" then return end
+    if type(value) ~= "table" then value = { value } end
     for _, t in ipairs(value) do
-      if type(t) == "string" and (not requireLink or string.match(t, "^%[%[")) then
-        local toId = idOf[deref(t)]
-        if toId and toId ~= fromId then
-          local op = field == "supersededBy" and "-.->" or "-->"
-          lines[#lines + 1] = "  " .. fromId .. " " .. op .. "|" .. pele.label(field) .. "| " .. toId
-        end
+      local toId = idOf[linkTarget(t, requireLink)]
+      if toId and toId ~= fromId then
+        local op = field == "supersededBy" and "-.->" or "-->"
+        lines[#lines + 1] = "  " .. fromId .. " " .. op .. "|" .. pele.label(field) .. "| " .. toId
       end
     end
   end
@@ -561,7 +612,7 @@ function pele.relationGraph(spec)
   end
 
   if #order < #pages then
-    lines[#lines + 1] = "  %% showing " .. #order .. " of " .. #pages .. " pages"
+    lines[#lines + 1] = "  n_more[" .. pele.label("… and " .. (#pages - #order) .. " more pages") .. "]"
   end
   return table.concat(lines, "\n")
 end
@@ -575,25 +626,33 @@ function pele.timeline(spec)
 
   -- A colon separates timeline fields, so labels can't contain one
   local function clean(s)
-    return (string.gsub(tostring(s), ":", " "))
+    local out = string.gsub(oneLine(s), ":", " ")
+    out = string.gsub(out, "#", "#35;")
+    return out
   end
   local function labelOf(p)
-    if spec.labelField and p[spec.labelField] then return clean(p[spec.labelField]) end
-    return clean(shortName(p.name))
+    if spec.labelField and p[spec.labelField] ~= nil then return clean(p[spec.labelField]) end
+    if type(p.name) == "string" then return clean(shortName(p.name)) end
+    return nil
   end
 
   local pages = {}
   for _, p in ipairs(spec.pages or {}) do
-    local d = p[dateField]
-    if type(d) == "string" and string.match(d, "^%d%d%d%d%-%d%d%-%d%d") then
+    local d = type(p) == "table" and p[dateField]
+    if type(d) == "string" and string.match(d, "^%d%d%d%d%-%d%d%-%d%d") and labelOf(p) then
       pages[#pages + 1] = p
     end
   end
   table.sort(pages, function(a, b) return a[dateField] < b[dateField] end)
 
-  local lines = { "timeline" }
-  if spec.title then lines[#lines + 1] = "  title " .. clean(spec.title) end
   local shown = math.min(#pages, max)
+  local title = spec.title and clean(spec.title)
+  if shown < #pages then
+    local note = "showing " .. shown .. " of " .. #pages
+    title = title and (title .. " (" .. note .. ")") or note
+  end
+  local lines = { "timeline" }
+  if title then lines[#lines + 1] = "  title " .. title end
   if groupBy == "year" then
     local years, byYear = {}, {}
     for i = 1, shown do
@@ -611,9 +670,6 @@ function pele.timeline(spec)
     for i = 1, shown do
       lines[#lines + 1] = "  " .. clean(pages[i][dateField]) .. " : " .. labelOf(pages[i])
     end
-  end
-  if shown < #pages then
-    lines[#lines + 1] = "  %% showing " .. shown .. " of " .. #pages
   end
   return table.concat(lines, "\n")
 end
@@ -636,7 +692,7 @@ function pele.distribution(spec)
     counts[v] = counts[v] + 1
   end
   for _, p in ipairs(spec.pages or {}) do
-    local v = p[by]
+    local v = type(p) == "table" and p[by] or nil
     if type(v) == "table" then
       if #v == 0 then count(nil) end
       for _, item in ipairs(v) do count(item) end
@@ -650,7 +706,7 @@ function pele.distribution(spec)
   end)
 
   local lines = { spec.showData and "pie showData" or "pie" }
-  if spec.title then lines[#lines + 1] = "  title " .. spec.title end
+  if spec.title then lines[#lines + 1] = "  title " .. oneLine(spec.title) end
   for _, label in ipairs(order) do
     lines[#lines + 1] = "  " .. pele.label(label) .. " : " .. counts[label]
   end
@@ -698,5 +754,8 @@ codeWidget.define {
   --pele-border: color-mix(in srgb, var(--root-color) 40%, var(--root-background-color));
   --pele-accent: var(--ui-accent-color);
   --pele-font: var(--ui-font);
+}
+.sb-pele .pele-node:has(a) {
+  cursor: pointer;
 }
 ```
