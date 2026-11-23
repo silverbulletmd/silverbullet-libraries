@@ -19,6 +19,7 @@ github:silverbulletmd/silverbullet-libraries@main/Library/silverbulletmd/Dashboa
 ## Available libraries
 
 * [Dashboard](Library/silverbulletmd/Dashboard.md): `widgets.chip`, `widgets.bars`, `widgets.stat` and `widgets.grid`, with theme-aware styles, click handlers and usage examples. Previously bundled in core's edge builds; install this library to continue using the same API names.
+* [Pele](Library/silverbulletmd/Pele.md): draws ` ```mermaid ` blocks with [Pele](https://pele.run/), a fast renderer for Mermaid syntax, with zoom, pan and theme-aware colors, plus a `pele.*` API for diagrams built from your space's data. Don't install it alongside the Mermaid library: both draw ` ```mermaid ` blocks.
 * [iA Writer Quattro](Library/silverbulletmd/Fonts/iAWriterQuattro.md): the proportional sibling of iA Writer Mono, for the editor or interface. Adds it to Configuration → Appearance; SIL Open Font License, files included.
 * [Georgia](Library/silverbulletmd/Fonts/Georgia.md): the screen serif that comes with macOS, Windows and iOS, for the editor or interface. Adds it to Configuration → Appearance; uses the installed copy, no files included (Georgia's license doesn't allow it).
 * [Gelasio](Library/silverbulletmd/Fonts/Gelasio.md): a free serif with Georgia's proportions that works on every device, for the editor or interface. Adds it to Configuration → Appearance; SIL Open Font License, files included.

@@ -12,6 +12,13 @@ uri: github:silverbulletmd/silverbullet-libraries@main/Library/silverbulletmd/Da
 ```
 
 ```#meta/library/remote
+name: Pele
+author: SilverBullet
+description: Fast Mermaid-syntax diagrams with zoom, pan and theme-aware colors, drawn by Pele.
+uri: github:silverbulletmd/silverbullet-libraries@main/Library/silverbulletmd/Pele.md
+```
+
+```#meta/library/remote
 name: iA Writer Quattro
 author: SilverBullet
 description: The proportional sibling of iA Writer Mono, for the editor or interface.
