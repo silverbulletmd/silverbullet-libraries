@@ -73,7 +73,7 @@ Renders Mermaid `source` as a widget. `opts` *(optional)* is passed to Pele:
 A flowchart of frontmatter relations between pages. Nodes are labeled with the last segment of the page name, and clicking one opens the page.
 
 * `pages`: the pages to draw, e.g. `query[[from index.pages("adr")]]`.
-* `relations` *(optional)*: frontmatter fields holding `[[page]]` links to draw as edges, e.g. `{"dependsOn", "related"}`. When omitted, every field whose values are `[[links]]` to pages in the set becomes an edge, labeled with the field name. `supersededBy` edges are dotted. Quote links in frontmatter (`dependsOn: "[[Page]]"`): that's the form YAML keeps as text.
+* `relations` *(optional)*: frontmatter fields holding `[[page]]` links to draw as edges, e.g. `{"dependsOn", "related"}`. When omitted, every field whose values are `[[links]]` to pages in the set becomes an edge, labeled with the field name. `supersededBy` edges are dotted. Quote links in frontmatter (`dependsOn: "[[Page]]"`): that's the form YAML keeps as text. Short links work as they do elsewhere in SilverBullet: `[[ADR/001]]` finds `Docs/ADR/001`.
 * `groupBy` *(optional)*: a field naming a container page; pages nest inside a box with their container as its first node, as many levels deep as you like.
 * `direction` *(optional)*: `"LR"` (default), `"TD"`, `"RL"` or `"BT"`.
 * `color` *(optional)*: a field whose value becomes a class on the node, passed through `pele.id` (so `In Progress` becomes `In_Progress`). Append `classDef` lines to style them:
@@ -539,6 +539,37 @@ function pele.relationGraph(spec)
     idOf[p.name] = "n" .. #order
   end
 
+  -- Links resolve the way SilverBullet resolves them: an exact name first,
+  -- then a unique name or path suffix, case-insensitively, so [[ADR/001]]
+  -- finds "Docs/ADR/001". Only pages in the graph count; a link that matches
+  -- several of them (and none in exact case) draws nothing.
+  local bySuffix = {}
+  for _, p in ipairs(order) do
+    local segs = {}
+    for seg in string.gmatch(p.name, "[^/]+") do segs[#segs + 1] = seg end
+    for i = 1, #segs do
+      local key = string.lower(table.concat(segs, "/", i, #segs))
+      bySuffix[key] = bySuffix[key] or {}
+      table.insert(bySuffix[key], p.name)
+    end
+  end
+  local function resolve(name)
+    if not name then return nil end
+    name = string.match(name, "^/?(.-)$")
+    if idOf[name] then return name end
+    local candidates = bySuffix[string.lower(name)]
+    if not candidates then return nil end
+    if #candidates == 1 then return candidates[1] end
+    local exactCase
+    for _, c in ipairs(candidates) do
+      if c == name or string.sub(c, -(#name + 1)) == "/" .. name then
+        if exactCase then return nil end
+        exactCase = c
+      end
+    end
+    return exactCase
+  end
+
   local lines = { "flowchart " .. (spec.direction or "LR") }
   local function node(p, indent)
     local cls = spec.color and p[spec.color]
@@ -555,8 +586,8 @@ function pele.relationGraph(spec)
   local childrenOf, hasParent = {}, {}
   if groupBy then
     for _, p in ipairs(order) do
-      local c = deref(p[groupBy])
-      if c and idOf[c] and c ~= p.name then
+      local c = resolve(deref(p[groupBy]))
+      if c and c ~= p.name then
         childrenOf[c] = childrenOf[c] or {}
         table.insert(childrenOf[c], p)
         hasParent[p.name] = true
@@ -595,7 +626,7 @@ function pele.relationGraph(spec)
   local function addEdges(fromId, field, value, requireLink)
     if type(value) ~= "table" then value = { value } end
     for _, t in ipairs(value) do
-      local toId = idOf[linkTarget(t, requireLink)]
+      local toId = idOf[resolve(linkTarget(t, requireLink))]
       if toId and toId ~= fromId then
         local op = field == "supersededBy" and "-.->" or "-->"
         lines[#lines + 1] = "  " .. fromId .. " " .. op .. "|" .. pele.label(field) .. "| " .. toId
